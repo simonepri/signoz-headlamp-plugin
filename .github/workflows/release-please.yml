@@ -1,0 +1,66 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release
+
+  publish:
+    needs: release-please
+    if: needs.release-please.outputs.release_created == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.release-please.outputs.tag_name }}
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm run tsc
+      - run: pnpm run lint
+      - run: pnpm test
+      - run: pnpm run build
+      - run: ./release_archive.sh
+      - run: shasum -a 256 signoz-headlamp-plugin-*.tar.gz | tee SHA256SUMS
+      - env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh release upload "${{ needs.release-please.outputs.tag_name }}"
+          signoz-headlamp-plugin-*.tar.gz SHA256SUMS
+      - name: Record the published artifact in release-manifest.json
+        run: |
+          tag='${{ needs.release-please.outputs.tag_name }}'
+          version=${tag#v}
+          artifact="signoz-headlamp-plugin-$version.tar.gz"
+          sha256=$(shasum -a 256 "$artifact" | cut -d' ' -f1)
+          url="https://github.com/$GITHUB_REPOSITORY/releases/download/$tag/$artifact"
+          git fetch origin main
+          git checkout main
+          jq --arg fileName "$artifact" --arg url "$url" --arg sha256 "$sha256" \
+            '.artifact.fileName = $fileName | .artifact.url = $url | .artifact.sha256 = $sha256 | .publicationStatus = "published"' \
+            release-manifest.json > release-manifest.json.tmp
+          mv release-manifest.json.tmp release-manifest.json
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add release-manifest.json
+          git commit -m "chore: record the $tag artifact digest"
+          git push origin main

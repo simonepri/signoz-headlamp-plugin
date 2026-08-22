@@ -1,0 +1,7 @@
+# The headlamp-plugin SDK assumes npm's flat node_modules layout for its
+# shared tsconfig, eslint config, and binary lookup.
+shamefullyHoist: true
+allowBuilds:
+  '@swc/core': true
+  esbuild: true
+  msw: false
