@@ -109,8 +109,11 @@ the resource alone. The screenshots in `demo/` come from that cluster.
 `release-please` proposes a release pull request from conventional commits.
 Merging it publishes a GitHub release, and CI attaches the archive plus
 `SHA256SUMS`, then records the URL and checksum in `artifacthub-pkg.yml`.
-`pnpm release:archive` builds the same bytes locally: ownership, order, and
-timestamps are fixed so the digest is reproducible.
+`pnpm release:archive` builds the archive locally. Ownership, order, and
+timestamps are fixed, so repeated builds on the same platform are identical,
+but GNU and BSD tar encode ustar headers differently, so a macOS build will
+not match a Linux one byte for byte. Verify downloads against the
+`SHA256SUMS` published with the release.
 
 ## License
 
