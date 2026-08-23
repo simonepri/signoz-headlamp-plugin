@@ -1,0 +1,57 @@
+version: 0.1.0
+name: signoz-observability-links
+displayName: SigNoz Observability Links
+createdAt: '2026-08-23T00:00:00Z'
+description: Origin-allowlisted SigNoz logs, metrics, traces, and errors links for Headlamp resource views.
+homeURL: https://github.com/simonepri/signoz-headlamp-plugin
+logoURL: https://raw.githubusercontent.com/simonepri/signoz-headlamp-plugin/main/logo.svg
+license: MIT
+links:
+  - name: Headlamp
+    url: https://github.com/kubernetes-sigs/headlamp
+  - name: SigNoz
+    url: https://signoz.io
+screenshots:
+  - title: Observability links on a workload
+    url: https://raw.githubusercontent.com/simonepri/signoz-headlamp-plugin/main/demo/deployment-links.png
+  - title: Observability links on a Pod
+    url: https://raw.githubusercontent.com/simonepri/signoz-headlamp-plugin/main/demo/pod-links.png
+annotations:
+  headlamp/plugin/archive-url: https://github.com/simonepri/signoz-headlamp-plugin/releases/download/v0.1.0/signoz-headlamp-plugin-0.1.0.tar.gz
+  headlamp/plugin/archive-checksum: SHA256:f83f1db404116984ed123b2e2e8a1935fecaa4a657bb4fdb6d897fa99a8d82f1
+  headlamp/plugin/version-compat: '>=0.25'
+  headlamp/plugin/distro-compat: in-cluster,web,docker-desktop,desktop
+install: |
+  On desktop, install from the Plugin Catalog, then open Settings for this
+  plugin and enter your SigNoz base URL. Links appear after a reload.
+
+  In-cluster, supply a `config.json` instead:
+
+  - Add an init container to your Headlamp Helm values that downloads the
+    release archive, verifies the checksum above, and unpacks it into the
+    shared plugins directory.
+  - Serve `config.json` next to the extracted plugin, at
+    `static-plugins/signoz-observability-links/config.json`, usually from a ConfigMap.
+  - A deployed `config.json` overrides per-user settings, so the origin
+    allowlist stays an administrator decision.
+
+  Without either source the plugin renders nothing, by design. See the
+  repository README for the configuration schema and a runnable kind demo.
+
+readme: |
+  # SigNoz links for Headlamp
+
+  Adds Logs, Metrics, Traces, and Errors links to Kubernetes resource views.
+  Links open SigNoz in a new tab, where you authenticate as usual. The plugin
+  has no API client, no proxy, and no credentials, and it only reads the
+  resource Headlamp already fetched.
+
+  Links appear on Pods, workloads, Namespaces, and Nodes. Each view queries its
+  own scope, and Errors is the traces explorer narrowed to error spans.
+
+  Queries use the standard OpenTelemetry Kubernetes attributes, so your
+  collector must set them for links to resolve to data.
+
+  A missing or invalid config, a non-HTTPS destination other than browser
+  loopback, an origin outside the allowlist, or a window outside 5 to 360
+  minutes all render no links.

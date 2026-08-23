@@ -46,7 +46,7 @@ jobs:
         run: >-
           gh release upload "${{ needs.release-please.outputs.tag_name }}"
           signoz-headlamp-plugin-*.tar.gz SHA256SUMS
-      - name: Record the published artifact in release-manifest.json
+      - name: Record the published artifact
         run: |
           tag='${{ needs.release-please.outputs.tag_name }}'
           version=${tag#v}
@@ -55,12 +55,11 @@ jobs:
           url="https://github.com/$GITHUB_REPOSITORY/releases/download/$tag/$artifact"
           git fetch origin main
           git checkout main
-          jq --arg fileName "$artifact" --arg url "$url" --arg sha256 "$sha256" \
-            '.artifact.fileName = $fileName | .artifact.url = $url | .artifact.sha256 = $sha256 | .publicationStatus = "published"' \
-            release-manifest.json > release-manifest.json.tmp
-          mv release-manifest.json.tmp release-manifest.json
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add release-manifest.json
+          sed -i -e "s|^  headlamp/plugin/archive-url: .*|  headlamp/plugin/archive-url: $url|" \
+            -e "s|^  headlamp/plugin/archive-checksum: .*|  headlamp/plugin/archive-checksum: SHA256:$sha256|" \
+            artifacthub-pkg.yml
+          git add artifacthub-pkg.yml
           git commit -m "chore: record the $tag artifact digest"
           git push origin main

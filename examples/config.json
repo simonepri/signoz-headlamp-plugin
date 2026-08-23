@@ -1,0 +1,12 @@
+{
+  "schemaVersion": 1,
+  "signozBaseUrl": "http://127.0.0.1:3301",
+  "allowedOrigins": ["http://127.0.0.1:3301"],
+  "windowMinutes": 30,
+  "correlation": {
+    "runLabelKeys": ["demo.simonepri.dev/run-id"],
+    "runAttribute": "demo.run.id",
+    "containerLabelKeys": ["demo.simonepri.dev/container"],
+    "containerAttribute": "k8s.container.name"
+  }
+}

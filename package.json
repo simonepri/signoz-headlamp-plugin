@@ -13,7 +13,6 @@
     "build": "headlamp-plugin build",
     "format": "headlamp-plugin format",
     "lint": "headlamp-plugin lint",
-    "package": "headlamp-plugin package",
     "release:archive": "./release_archive.sh",
     "test": "headlamp-plugin test",
     "tsc": "headlamp-plugin tsc"

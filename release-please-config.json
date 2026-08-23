@@ -8,8 +8,8 @@
     ".": {
       "extra-files": [
         {
-          "type": "json",
-          "path": "release-manifest.json",
+          "type": "yaml",
+          "path": "artifacthub-pkg.yml",
           "jsonpath": "$.version"
         }
       ]

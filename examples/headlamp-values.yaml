@@ -1,0 +1,16 @@
+fullnameOverride: headlamp-signoz
+config:
+  inCluster: true
+  pluginsDir: /headlamp/plugins
+  staticPlugins:
+    enabled: true
+  watchPlugins: false
+clusterRoleBinding:
+  create: true
+volumes:
+  - name: plugin
+    configMap:
+      name: signoz-headlamp-plugin
+volumeMounts:
+  - name: plugin
+    mountPath: /headlamp/static-plugins/signoz-observability-links
