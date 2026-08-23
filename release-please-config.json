@@ -12,7 +12,8 @@
           "path": "artifacthub-pkg.yml",
           "jsonpath": "$.version"
         }
-      ]
+      ],
+      "initial-version": "0.1.0"
     }
   }
 }
