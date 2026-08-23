@@ -14,6 +14,7 @@ jobs:
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
       tag_name: ${{ steps.release.outputs.tag_name }}
+      version: ${{ steps.release.outputs.version }}
     steps:
       - uses: googleapis/release-please-action@v4
         id: release
@@ -49,7 +50,7 @@ jobs:
       - name: Record the published artifact
         run: |
           tag='${{ needs.release-please.outputs.tag_name }}'
-          version=${tag#v}
+          version='${{ needs.release-please.outputs.version }}'
           artifact="signoz-headlamp-plugin-$version.tar.gz"
           sha256=$(shasum -a 256 "$artifact" | cut -d' ' -f1)
           url="https://github.com/$GITHUB_REPOSITORY/releases/download/$tag/$artifact"
