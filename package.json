@@ -1,6 +1,6 @@
 {
   "name": "@simonepri/signoz-headlamp-plugin",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Origin-allowlisted SigNoz links for Kubernetes resource details in Headlamp",
   "license": "MIT",
   "private": false,
