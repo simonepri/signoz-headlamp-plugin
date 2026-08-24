@@ -22,9 +22,8 @@ screenshots:
     url: >-
       https://raw.githubusercontent.com/simonepri/signoz-headlamp-plugin/main/demo/pod-links.png
 annotations:
-  headlamp/plugin/archive-url: >-
-    https://github.com/simonepri/signoz-headlamp-plugin/releases/download/v0.1.1/signoz-headlamp-plugin-0.1.1.tar.gz
-  headlamp/plugin/archive-checksum: SHA256:a37efc7f432740662d16333d48b76df59cb9ada6867b2c9ab179dda8e50dbe81
+  headlamp/plugin/archive-url: https://github.com/simonepri/signoz-headlamp-plugin/releases/download/v0.1.3/signoz-headlamp-plugin-0.1.3.tar.gz
+  headlamp/plugin/archive-checksum: SHA256:89b66cb022330e3739ce9b507ea37f86f30d45d459ba2b5bcf46cd3d6bc92dec
   headlamp/plugin/version-compat: '>=0.25'
   headlamp/plugin/distro-compat: in-cluster,web,docker-desktop,desktop
 install: |
